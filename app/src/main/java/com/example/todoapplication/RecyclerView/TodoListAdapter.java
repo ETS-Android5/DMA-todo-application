@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.todoapplication.Database.DB;
 import com.example.todoapplication.Models.Todo;
 import com.example.todoapplication.R;
 
@@ -19,9 +20,13 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
    Context context;
    List<Todo> todoItems;
 
-   public TodoListAdapter(Context context, List<Todo> todoItems) {
+   DB database;
+   TodoClickListener todoClickListener;
+
+   public TodoListAdapter(Context context, List<Todo> todoItems, TodoClickListener listener) {
       this.context = context;
       this.todoItems = todoItems;
+      this.todoClickListener = listener;
    }
 
    @NonNull
@@ -45,12 +50,14 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
       holder.todoListContainer.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
+            todoClickListener.onClick(todoItems.get(holder.getAdapterPosition()));
          }
       });
 
       holder.todoListContainer.setOnLongClickListener(new View.OnLongClickListener(){
          @Override
          public boolean onLongClick(View view) {
+            todoClickListener.onLongClick(todoItems.get(holder.getAdapterPosition()), holder.todoListContainer);
             return true;
          }
       });

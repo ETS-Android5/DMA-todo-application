@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_primary"
+    android:padding="@dimen/dimen_small"
+    tools:context=".TodoManagerActivity">
+
+    <EditText
+        android:id="@+id/todo_title_input"
+        android:hint="@string/todo_title_hint"
+        android:inputType="text"
+        style="@style/todo_input_style" />
+
+    <EditText
+        android:id="@+id/todo_description_input"
+        android:hint="@string/todo_description_hint"
+        android:layout_below="@id/todo_title_input"
+        style="@style/todo_input_style"
+        android:inputType="text|textMultiLine"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_todo_btn"
+        android:src="@drawable/ic_baseline_done_24"
+        style="@style/floating_btn_style"
+        />
+
+</RelativeLayout>

@@ -23,6 +23,15 @@ public class Todo implements Serializable {
    @ColumnInfo(name = "isCompleted")
    boolean isCompleted;
 
+   public Todo(){}
+
+   public Todo(String title, String description, String createdAt, boolean isCompleted) {
+      this.title = title;
+      this.description = description;
+      this.createdAt = createdAt;
+      this.isCompleted = isCompleted;
+   }
+
    public int getId() {
       return id;
    }

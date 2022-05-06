@@ -10,6 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TodoApplication">
         <activity
+            android:name=".TodoManagerActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="Manage Todo"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
