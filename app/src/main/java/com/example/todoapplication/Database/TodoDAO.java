@@ -6,11 +6,9 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import com.example.todoapplication.Models.Todo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -23,8 +21,8 @@ public interface TodoDAO {
    @Query("SELECT * FROM todos ORDER BY id DESC")
    List<Todo> fetchTodos();
 
-   @Update
-   void updateTodo(Todo todo);
+   @Query("UPDATE todos SET title=:title, description=:description WHERE id=:id")
+   void updateTodo(int id, String title, String description);
 
    @Delete
    void deleteTodo(Todo todo);

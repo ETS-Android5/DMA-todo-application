@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton addTodoBtn;
 
     public static final int NEW_TODO_REQUEST_CODE = 201;
+    public static final int UPDATE_TODO_REQUEST_CODE = 202;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,25 +63,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==NEW_TODO_REQUEST_CODE){
-            if (resultCode == Activity.RESULT_OK){
-                Todo newTodo = (Todo) data.getSerializableExtra(TodoManagerActivity.NEW_TODO_EXTRA);
-                saveTodo(newTodo);
+        if(resultCode == Activity.RESULT_OK){
+            switch (requestCode){
+                case NEW_TODO_REQUEST_CODE:
+                    Todo newTodo = (Todo) data.getSerializableExtra(TodoManagerActivity.NEW_TODO_EXTRA);
+                    saveTodo(newTodo);
+                    break;
+
+                case UPDATE_TODO_REQUEST_CODE:
+                    Todo updatedTodo = (Todo) data.getSerializableExtra(TodoManagerActivity.UPDATE_TODO_EXTRA);
+                    updateTodo(updatedTodo);
+                    break;
             }
         }
-    }
-
-    @Override
-    // onResume is used so that all the list is updated when navigating back from todo manager activity
-    protected void onResume(){
-        super.onResume();
-        fetchAllTodos();
     }
 
     public void fetchAllTodos(){
         // get all todo items and update the recycler view
         this.todoItems = database.todoDAO().fetchTodos();
         renderView(this.todoItems);
+    }
+
+    public void reRenderList(){
 
         // refetch the todo items from the database
         this.todoItems.clear();
@@ -88,11 +92,18 @@ public class MainActivity extends AppCompatActivity {
 
         // re-render recycler view for the saved data
         todoListAdapter.notifyDataSetChanged();
-        Toast.makeText(this, "New todo created!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void updateTodo(Todo updatedTodo){
+        database.todoDAO().updateTodo(updatedTodo.getId(), updatedTodo.getTitle(), updatedTodo.getDescription());
+        reRenderList();
+        Toast.makeText(this, "Todo Updated!", Toast.LENGTH_SHORT).show();
     }
 
     public void saveTodo(Todo newTodo){
         database.todoDAO().insert(newTodo);
+        reRenderList();
+        Toast.makeText(this, "New todo created!", Toast.LENGTH_SHORT).show();
     }
 
     private void renderView(List<Todo> todoItems){
@@ -107,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
     private final TodoClickListener todoClickListener = new TodoClickListener() {
         @Override
         public void onClick(Todo todo) {
+            Intent intent = new Intent(MainActivity.this, TodoManagerActivity.class);
+            intent.putExtra(TodoManagerActivity.UPDATE_TODO_EXTRA, todo);
+            startActivityForResult(intent, UPDATE_TODO_REQUEST_CODE);
         }
 
         @Override
