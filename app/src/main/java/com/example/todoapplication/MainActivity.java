@@ -71,9 +71,16 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case UPDATE_TODO_REQUEST_CODE:
-                    Todo updatedTodo = (Todo) data.getSerializableExtra(TodoManagerActivity.UPDATE_TODO_EXTRA);
-                    updateTodo(updatedTodo);
-                    break;
+                    try {
+                        Todo updatedTodo = (Todo) data.getSerializableExtra(TodoManagerActivity.UPDATE_TODO_EXTRA);
+                        updateTodo(updatedTodo);
+                    }catch (Exception e){
+                        Todo todoToDelete = (Todo) data.getSerializableExtra(TodoManagerActivity.DELETE_TODO_EXTRA);
+                        deleteTodo(todoToDelete);
+                    }
+                    finally {
+                        break;
+                    }
             }
         }
     }
@@ -98,6 +105,12 @@ public class MainActivity extends AppCompatActivity {
         database.todoDAO().updateTodo(updatedTodo.getId(), updatedTodo.getTitle(), updatedTodo.getDescription());
         reRenderList();
         Toast.makeText(this, "Todo Updated!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void deleteTodo(Todo todoToDelete){
+        database.todoDAO().deleteTodo(todoToDelete);
+        reRenderList();
+        Toast.makeText(this, "Todo Deleted!", Toast.LENGTH_SHORT).show();
     }
 
     public void saveTodo(Todo newTodo){

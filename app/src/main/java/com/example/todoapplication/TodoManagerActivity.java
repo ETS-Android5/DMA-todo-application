@@ -1,12 +1,10 @@
 package com.example.todoapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,10 +14,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TodoManagerActivity extends AppCompatActivity {
+public class TodoManagerActivity extends AppCompatActivity implements  View.OnClickListener{
 
     EditText todoTitle, todoDescription;
     FloatingActionButton addTodoBtn;
+    Button deleteTodoBtn;
 
     String title, description;
     Todo todo;
@@ -27,6 +26,7 @@ public class TodoManagerActivity extends AppCompatActivity {
 
     public static final String NEW_TODO_EXTRA = "new_todo";
     public static final String UPDATE_TODO_EXTRA = "update_todo";
+    public static final String DELETE_TODO_EXTRA = "delete_todo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +36,35 @@ public class TodoManagerActivity extends AppCompatActivity {
         todoTitle = findViewById(R.id.todo_title_input);
         todoDescription = findViewById(R.id.todo_description_input);
         addTodoBtn = findViewById(R.id.add_todo_btn);
+        deleteTodoBtn = findViewById(R.id.delete_todo_btn);
 
         // check if the activity is launched for creating a todo or updating one
         if(getIntent().getSerializableExtra(UPDATE_TODO_EXTRA)!=null){
             todo = (Todo) getIntent().getSerializableExtra(UPDATE_TODO_EXTRA);
             isOldTodo = true;
             setOldValues();
+
+            // set the delete button's visibility to visible
+            deleteTodoBtn.setVisibility(View.VISIBLE);
+
+            // change title to update todo
+            this.setTitle("Update Todo");
         }
 
-        addTodoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TodoManagerActivity.this.title = todoTitle.getText().toString();
-                TodoManagerActivity.this.description = todoDescription.getText().toString();
+        // on click listeners for add/update and delete buttons
+        deleteTodoBtn.setOnClickListener(this);
+        addTodoBtn.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int viewId = view.getId();
+        Intent intent = new Intent();
+
+        switch (viewId){
+            case R.id.add_todo_btn:
+                this.title = todoTitle.getText().toString();
+                this.description = todoDescription.getText().toString();
 
                 // validate title
                 if(title.isEmpty()){
@@ -56,13 +72,19 @@ public class TodoManagerActivity extends AppCompatActivity {
                     return;
                 }
 
-                //result intent
-                Intent intent = new Intent();
                 intent.putExtra(isOldTodo?UPDATE_TODO_EXTRA:NEW_TODO_EXTRA, isOldTodo?updateTodo():createNewTodo());
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-            }
-        });
+                break;
+
+            case R.id.delete_todo_btn:
+                intent.putExtra(DELETE_TODO_EXTRA, this.todo);
+                break;
+
+            default:
+                return;
+        }
+
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     public void setOldValues(){

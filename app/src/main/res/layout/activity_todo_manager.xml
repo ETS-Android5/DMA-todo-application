@@ -23,6 +23,17 @@
         android:inputType="text|textMultiLine"
         />
 
+    <Button
+        android:id="@+id/delete_todo_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Entry"
+        android:layout_below="@id/todo_description_input"
+        android:layout_marginTop="@dimen/dimen_regular"
+        android:backgroundTint="@color/red_primary"
+        android:visibility="gone"
+        />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_todo_btn"
         android:src="@drawable/ic_baseline_done_24"

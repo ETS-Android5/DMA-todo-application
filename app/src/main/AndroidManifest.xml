@@ -12,7 +12,7 @@
         <activity
             android:name=".TodoManagerActivity"
             android:parentActivityName=".MainActivity"
-            android:label="Manage Todo"
+            android:label="Add a Todo"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
