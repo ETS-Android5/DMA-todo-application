@@ -1,13 +1,13 @@
 package com.example.todoapplication.Database;
 
 import android.content.Context;
-
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import com.example.todoapplication.Models.Todo;
+import com.example.todoapplication.Models.User;
 
-@Database(entities = Todo.class, version = 1, exportSchema = false)
+@Database(entities = {Todo.class, User.class}, version = 1, exportSchema = false)
 public abstract class DB extends RoomDatabase {
     private static DB database;
     private static String DB_Name = "TodoApplication";
@@ -23,4 +23,5 @@ public abstract class DB extends RoomDatabase {
     }
 
     public abstract TodoDAO todoDAO();
+    public abstract UserDAO userDAO();
 }

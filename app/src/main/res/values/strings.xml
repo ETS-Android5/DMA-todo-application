@@ -2,4 +2,22 @@
     <string name="app_name">Todo Application</string>
     <string name="todo_title_hint">Todo Title</string>
     <string name="todo_description_hint">Todo Description</string>
+    <string name="search_todo_hint">Search Todos</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="password_input_hint">Password</string>
+    <string name="username_input_hint">Username</string>
+    <string name="sign_in_btn_hint">Sign In</string>
+    <string name="full_name_input_hint">Full Name</string>
+    <string name="create_account_btn_hint">Create Account</string>
+    <string name="register_redirect_text">Not registered? Register here</string>
+    <string name="login_redirect_text">Already got an account? Log In</string>
+    <string name="greeting">Welcome back, </string>
 </resources>

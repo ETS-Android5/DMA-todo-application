@@ -2,19 +2,25 @@ package com.example.todoapplication;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.todoapplication.Database.DB;
 import com.example.todoapplication.Models.Todo;
+import com.example.todoapplication.Models.User;
 import com.example.todoapplication.RecyclerView.TodoClickListener;
 import com.example.todoapplication.RecyclerView.TodoListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -24,10 +30,16 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     RecyclerView todoRecyclerView;
     TodoListAdapter todoListAdapter;
+    SearchView searchView;
+    TextView userGreeting;
 
     List<Todo> todoItems = new ArrayList<Todo>();
     DB database;
     FloatingActionButton addTodoBtn;
+
+    int loggedInUserId;
+
+    String searchQuery = "";
 
     public static final int NEW_TODO_REQUEST_CODE = 201;
     public static final int UPDATE_TODO_REQUEST_CODE = 202;
@@ -42,10 +54,16 @@ public class MainActivity extends AppCompatActivity {
 
         todoRecyclerView = findViewById(R.id.recycler_view);
         addTodoBtn = findViewById(R.id.todo_manager_intent_btn);
+        searchView = findViewById(R.id.search_todo);
+        userGreeting = findViewById(R.id.user_greeting);
 
-        // pass this as context
+        // get intent details sent from login/splash screen
+        Intent initialIntent = getIntent();
+        loggedInUserId = fetchUserId();
+
+        // pass this as context when initializing database object
         database = DB.getInstance(this);
-
+        fetchUserDetails();
         fetchAllTodos();
 
         // onclick listener for add todo button
@@ -56,6 +74,27 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, NEW_TODO_REQUEST_CODE);
             }
         });
+
+        // listeners for search view
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                MainActivity.this.searchQuery = newText;
+                filterItems();
+                return true;
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchAllTodos();
     }
 
     // Result from TodoManagerActivity activity
@@ -83,6 +122,31 @@ public class MainActivity extends AppCompatActivity {
                     }
             }
         }
+    }
+
+    private int fetchUserId(){
+        SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.SHARED_PREF, MODE_PRIVATE);
+        int userId = sharedPreferences.getInt(LoginActivity.USER_ID, -1);
+        return userId;
+    }
+
+    private void fetchUserDetails() {
+        User user = database.userDAO().getUserDetails(loggedInUserId);
+        userGreeting.setText(userGreeting.getText().toString()+user.getFullName().split(" ")[0]);
+    }
+
+    public void filterItems(){
+        List<Todo> newList = new ArrayList<>();
+
+        // loop through the todo items to compare their contents with the query
+        for(Todo todo : todoItems){
+            if(todo.getTitle().toLowerCase().contains(this.searchQuery)){
+                newList.add(todo);
+            }
+        }
+
+        this.todoListAdapter.setFilteredItems(newList);
+        this.todoListAdapter.notifyDataSetChanged();
     }
 
     public void fetchAllTodos(){
@@ -113,6 +177,14 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Todo Deleted!", Toast.LENGTH_SHORT).show();
     }
 
+    public void toggleTodo(Todo todo){
+        database.todoDAO().toggleTodo(todo.getId(), !todo.getCompleted());
+        reRenderList();
+
+        // re-filter items in case items were searched for before toggling
+        this.filterItems();
+    }
+
     public void saveTodo(Todo newTodo){
         database.todoDAO().insert(newTodo);
         reRenderList();
@@ -130,10 +202,18 @@ public class MainActivity extends AppCompatActivity {
 
     private final TodoClickListener todoClickListener = new TodoClickListener() {
         @Override
-        public void onClick(Todo todo) {
-            Intent intent = new Intent(MainActivity.this, TodoManagerActivity.class);
-            intent.putExtra(TodoManagerActivity.UPDATE_TODO_EXTRA, todo);
-            startActivityForResult(intent, UPDATE_TODO_REQUEST_CODE);
+        public void onClick(Todo todo, String action) {
+            // update todo
+            if(action==TodoListAdapter.UPDATE_TODO_ACTION){
+                Intent intent = new Intent(MainActivity.this, TodoManagerActivity.class);
+                intent.putExtra(TodoManagerActivity.UPDATE_TODO_EXTRA, todo);
+                startActivityForResult(intent, UPDATE_TODO_REQUEST_CODE);
+            }
+            else{
+                // toggle todo completion status
+                MainActivity.this.toggleTodo(todo);
+            }
+
         }
 
         @Override

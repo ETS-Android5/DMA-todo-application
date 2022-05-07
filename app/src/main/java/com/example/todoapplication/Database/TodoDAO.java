@@ -1,7 +1,6 @@
 package com.example.todoapplication.Database;
 
 import static androidx.room.OnConflictStrategy.REPLACE;
-
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -23,6 +22,9 @@ public interface TodoDAO {
 
    @Query("UPDATE todos SET title=:title, description=:description WHERE id=:id")
    void updateTodo(int id, String title, String description);
+
+   @Query("UPDATE todos SET isCompleted=:newStatus WHERE id=:id")
+   void toggleTodo(int id, boolean newStatus);
 
    @Delete
    void deleteTodo(Todo todo);

@@ -14,9 +14,10 @@
         android:layout_height="wrap_content">
 
         <CheckBox
-            android:layout_width="wrap_content"
             android:layout_gravity="center"
             android:id="@+id/todo_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="@dimen/dimen_regular"
             android:layout_height="wrap_content">
         </CheckBox>
 

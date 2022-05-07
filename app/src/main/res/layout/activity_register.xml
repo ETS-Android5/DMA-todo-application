@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary"
+    android:padding="@dimen/dimen_regular"
+    tools:context=".RegisterActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/input_style"
+            android:id="@+id/full_name_input"
+            android:hint="@string/full_name_input_hint" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/input_style"
+            android:id="@+id/username_input"
+            android:hint="@string/username_input_hint" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/input_style"
+            android:inputType="textPassword"
+            android:id="@+id/password_input"
+            android:hint="@string/password_input_hint" />
+
+        <Button
+            android:id="@+id/register_btn"
+            android:text="@string/create_account_btn_hint"
+            style="@style/auth_btn_style" />
+
+        <TextView
+            android:id="@+id/auth_redirect"
+            android:text="@string/login_redirect_text"
+            style ="@style/auth_redirect_text_style" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary"
+    android:padding="@dimen/dimen_regular"
+    tools:context=".LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            style="@style/input_style"
+            android:id="@+id/username_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/username_input_hint" />
+
+        <EditText
+            style="@style/input_style"
+            android:id="@+id/password_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="@string/password_input_hint" />
+
+        <Button
+            android:id="@+id/sign_in_btn"
+            android:text="@string/sign_in_btn_hint"
+            style="@style/auth_btn_style" />
+
+        <TextView
+            android:id="@+id/auth_redirect"
+            android:text="@string/register_redirect_text"
+            style="@style/auth_redirect_text_style" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

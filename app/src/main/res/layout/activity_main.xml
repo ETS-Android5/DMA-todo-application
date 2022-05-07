@@ -8,10 +8,32 @@
     android:background="@color/bg_primary"
     tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/user_greeting"
+        android:layout_margin="@dimen/dimen_regular"
+        android:layout_width="wrap_content"
+        android:text="@string/greeting"
+        android:textColor="@color/white_primary"
+        android:textStyle="bold"
+        android:textSize="@dimen/font_large"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_todo"
+        android:layout_margin="@dimen/dimen_regular"
+        android:layout_width="match_parent"
+        android:background="@color/bg_secondary"
+        app:iconifiedByDefault="false"
+        app:queryHint="@string/search_todo_hint"
+        android:layout_below="@+id/user_greeting"
+        android:layout_height="wrap_content" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/dimen_small"
+        android:layout_below="@id/search_todo"
+        android:layout_marginTop="@dimen/dimen_regular"
         android:id="@+id/recycler_view" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

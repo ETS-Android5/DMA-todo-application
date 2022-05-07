@@ -17,11 +17,18 @@ import java.util.List;
 
 public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoViewHolder> {
 
+   public static final String UPDATE_TODO_ACTION = "update_todo_action";
+   public static final String TOGGLE_TODO_ACTION = "toggle_todo_action";
+
    Context context;
    List<Todo> todoItems;
 
    DB database;
    TodoClickListener todoClickListener;
+
+   public void setFilteredItems(List<Todo> todoItems){
+      this.todoItems = todoItems;
+   }
 
    public TodoListAdapter(Context context, List<Todo> todoItems, TodoClickListener listener) {
       this.context = context;
@@ -50,7 +57,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
       holder.todoListContainer.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
-            todoClickListener.onClick(todoItems.get(holder.getAdapterPosition()));
+            todoClickListener.onClick(todoItems.get(holder.getAdapterPosition()), UPDATE_TODO_ACTION);
          }
       });
 
@@ -59,6 +66,13 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
          public boolean onLongClick(View view) {
             todoClickListener.onLongClick(todoItems.get(holder.getAdapterPosition()), holder.todoListContainer);
             return true;
+         }
+      });
+
+      holder.todoStatus.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+            todoClickListener.onClick(todoItems.get(holder.getAdapterPosition()), TOGGLE_TODO_ACTION);
          }
       });
    }
