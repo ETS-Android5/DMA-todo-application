@@ -58,6 +58,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
       Todo currentTodo = todoItems.get(position);
 
       holder.todoTitle.setText(currentTodo.getTitle());
+      holder.todoCategory.setText(currentTodo.getCategory());
       holder.todoStatus.setChecked(currentTodo.getCompleted());
 
       // check if description is empty of too long for the preview
@@ -98,7 +99,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
    public class TodoViewHolder extends  RecyclerView.ViewHolder{
 
       CardView todoListContainer;
-      TextView todoTitle, tododescription;
+      TextView todoTitle, tododescription, todoCategory;
       CheckBox todoStatus;
 
       public TodoViewHolder(@NonNull View itemView) {
@@ -108,6 +109,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
          todoTitle = itemView.findViewById(R.id.todo_title);
          todoStatus = itemView.findViewById(R.id.todo_checkbox);
          tododescription = itemView.findViewById(R.id.todo_description);
+         todoCategory = itemView.findViewById(R.id.todo_category);
       }
    }
 

@@ -4,30 +4,39 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.example.todoapplication.Models.Todo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class TodoManagerActivity extends AppCompatActivity implements  View.OnClickListener{
 
     EditText todoTitle, todoDescription;
     FloatingActionButton addTodoBtn;
     Button deleteTodoBtn;
+    Spinner todoCategoryDropdown;
 
     String title, description = "";
     Todo todo;
+    String todoCategory;
     boolean isOldTodo;
 
     public static final String NEW_TODO_EXTRA = "new_todo";
     public static final String UPDATE_TODO_EXTRA = "update_todo";
     public static final String DELETE_TODO_EXTRA = "delete_todo";
+
+    public static final List<String> TODO_CATEGORIES = new ArrayList<String>(Arrays.asList("Home", "Work", "School", "Shopping"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +47,34 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
         todoDescription = findViewById(R.id.todo_description_input);
         addTodoBtn = findViewById(R.id.add_todo_btn);
         deleteTodoBtn = findViewById(R.id.delete_todo_btn);
+        todoCategoryDropdown = findViewById(R.id.todo_category_dropdown);
+
+        // populate dropdown with values from the TODO_CATEGORY list
+        populateDropdown();
+
+        // on item change listener for the category dropdown menu
+        todoCategoryDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                TodoManagerActivity.this.todoCategory = TODO_CATEGORIES.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         // check if the activity is launched for creating a todo or updating one
         if(getIntent().getSerializableExtra(UPDATE_TODO_EXTRA)!=null){
             todo = (Todo) getIntent().getSerializableExtra(UPDATE_TODO_EXTRA);
             isOldTodo = true;
             setOldValues();
+
+            // set dropdown value
+            int dropdownItemPosition = TODO_CATEGORIES.indexOf(todo.getCategory());
+            todoCategoryDropdown.setSelection(dropdownItemPosition);
 
             // set the delete button's visibility to visible
             deleteTodoBtn.setVisibility(View.VISIBLE);
@@ -90,6 +121,13 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
         finish();
     }
 
+    public void populateDropdown(){
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.selected_dropdown_item, TODO_CATEGORIES);
+        adapter.setDropDownViewResource(R.layout.dropdown_list_items);
+        this.todoCategoryDropdown.setAdapter(adapter);
+
+    }
+
     public void setOldValues(){
         this.todoTitle.setText(this.todo.getTitle());
         this.todoDescription.setText(this.todo.getDescription());
@@ -98,6 +136,7 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
     public Todo updateTodo(){
         this.todo.setTitle(this.title);
         this.todo.setDescription(this.description);
+        this.todo.setCategory(this.todoCategory);
 
         return this.todo;
     }
@@ -111,7 +150,7 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
         int userId = sharedPreferences.getInt(LoginActivity.USER_ID, -1);
 
         // create the new todo object
-        Todo newTodo = new Todo(title, description, createdAt, false, userId);
+        Todo newTodo = new Todo(title, description, createdAt, false, userId, todoCategory);
 
         return newTodo;
     }

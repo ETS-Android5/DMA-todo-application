@@ -20,8 +20,8 @@ public interface TodoDAO {
    @Query("SELECT * FROM todos ORDER BY id DESC")
    List<Todo> fetchTodos();
 
-   @Query("UPDATE todos SET title=:title, description=:description WHERE id=:id")
-   void updateTodo(int id, String title, String description);
+   @Query("UPDATE todos SET title=:title, description=:description, category=:category WHERE id=:id")
+   void updateTodo(int id, String title, String description, String category);
 
    @Query("UPDATE todos SET isCompleted=:newStatus WHERE id=:id")
    void toggleTodo(int id, boolean newStatus);

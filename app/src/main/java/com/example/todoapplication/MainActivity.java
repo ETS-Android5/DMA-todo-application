@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void updateTodo(Todo updatedTodo){
-        database.todoDAO().updateTodo(updatedTodo.getId(), updatedTodo.getTitle(), updatedTodo.getDescription());
+        database.todoDAO().updateTodo(updatedTodo.getId(), updatedTodo.getTitle(), updatedTodo.getDescription(), updatedTodo.getCategory());
         reRenderList();
         Toast.makeText(this, "Todo Updated!", Toast.LENGTH_SHORT).show();
     }

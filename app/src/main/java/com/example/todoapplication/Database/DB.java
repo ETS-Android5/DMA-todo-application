@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase;
 import com.example.todoapplication.Models.Todo;
 import com.example.todoapplication.Models.User;
 
-@Database(entities = {Todo.class, User.class}, version = 4, exportSchema = false)
+@Database(entities = {Todo.class, User.class}, version = 5, exportSchema = false)
 public abstract class DB extends RoomDatabase {
     private static DB database;
     private static String DB_Name = "TodoApplication";
