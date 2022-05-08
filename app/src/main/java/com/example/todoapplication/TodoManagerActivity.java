@@ -21,7 +21,7 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
     FloatingActionButton addTodoBtn;
     Button deleteTodoBtn;
 
-    String title, description;
+    String title, description = "";
     Todo todo;
     boolean isOldTodo;
 
@@ -65,7 +65,9 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
         switch (viewId){
             case R.id.add_todo_btn:
                 this.title = todoTitle.getText().toString();
-                this.description = todoDescription.getText().toString();
+
+                String todoText = todoDescription.getText().toString();
+                this.description = todoText.isEmpty()?"":todoText;
 
                 // validate title
                 if(title.isEmpty()){

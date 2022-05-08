@@ -45,6 +45,13 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
       return new TodoViewHolder(view);
    }
 
+   private String trimDescription(String description){
+      final int maxLength = 40;
+      if(description.length()<maxLength) return description;
+
+      return description.substring(0, maxLength-3) + "...";
+   }
+
    @Override
    public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {
       // set values for each todo item
@@ -52,6 +59,12 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
 
       holder.todoTitle.setText(currentTodo.getTitle());
       holder.todoStatus.setChecked(currentTodo.getCompleted());
+
+      // check if description is empty of too long for the preview
+      if(!currentTodo.getDescription().isEmpty()){
+         holder.tododescription.setVisibility(View.VISIBLE);
+         holder.tododescription.setText(trimDescription(currentTodo.getDescription()));
+      }
 
       // set on click listener to todo items
       holder.todoListContainer.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +98,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
    public class TodoViewHolder extends  RecyclerView.ViewHolder{
 
       CardView todoListContainer;
-      TextView todoTitle;
+      TextView todoTitle, tododescription;
       CheckBox todoStatus;
 
       public TodoViewHolder(@NonNull View itemView) {
@@ -94,6 +107,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
          todoListContainer = itemView.findViewById(R.id.todo_item_container);
          todoTitle = itemView.findViewById(R.id.todo_title);
          todoStatus = itemView.findViewById(R.id.todo_checkbox);
+         tododescription = itemView.findViewById(R.id.todo_description);
       }
    }
 
