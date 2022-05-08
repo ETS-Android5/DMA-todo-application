@@ -10,16 +10,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.todoapplication.Database.DB;
 import com.example.todoapplication.Models.Todo;
+import com.example.todoapplication.Models.TodoWithUser;
 import com.example.todoapplication.Models.User;
 import com.example.todoapplication.RecyclerView.TodoClickListener;
 import com.example.todoapplication.RecyclerView.TodoListAdapter;
@@ -27,11 +27,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     RecyclerView todoRecyclerView;
     TodoListAdapter todoListAdapter;
     SearchView searchView;
     TextView userGreeting;
+    ImageButton logoutBtn;
 
     List<Todo> todoItems = new ArrayList<Todo>();
     DB database;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         addTodoBtn = findViewById(R.id.todo_manager_intent_btn);
         searchView = findViewById(R.id.search_todo);
         userGreeting = findViewById(R.id.user_greeting);
+        logoutBtn = findViewById(R.id.log_out_btn);
 
         // get intent details sent from login/splash screen
         Intent initialIntent = getIntent();
@@ -66,14 +68,9 @@ public class MainActivity extends AppCompatActivity {
         fetchUserDetails();
         fetchAllTodos();
 
-        // onclick listener for add todo button
-        addTodoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, TodoManagerActivity.class);
-                startActivityForResult(intent, NEW_TODO_REQUEST_CODE);
-            }
-        });
+        // onclick listener for add buttons
+        addTodoBtn.setOnClickListener(this);
+        logoutBtn.setOnClickListener(this);
 
         // listeners for search view
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -89,6 +86,34 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+        int viewId = view.getId();
+
+        switch (viewId){
+            case R.id.todo_manager_intent_btn:
+                Intent intent = new Intent(MainActivity.this, TodoManagerActivity.class);
+                startActivityForResult(intent, NEW_TODO_REQUEST_CODE);
+                break;
+
+            case R.id.log_out_btn:
+                // delete the user id key in shared preferences
+                SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.SHARED_PREF, MODE_PRIVATE);
+                sharedPreferences.edit().remove(LoginActivity.USER_ID).commit();
+
+                // redirect to login screen
+                Intent loginIntent = new Intent(this, LoginActivity.class);
+                startActivity(loginIntent);
+                finish();
+                Toast.makeText(this, "Logged out!", Toast.LENGTH_SHORT).show();
+
+                break;
+
+            default:
+                return;
+        }
     }
 
     @Override
@@ -132,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchUserDetails() {
         User user = database.userDAO().getUserDetails(loggedInUserId);
-        userGreeting.setText(userGreeting.getText().toString()+user.getFullName().split(" ")[0]);
+        userGreeting.setText(userGreeting.getText().toString()+" "+user.getFullName().split(" ")[0]);
     }
 
     public void filterItems(){
@@ -151,15 +176,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void fetchAllTodos(){
         // get all todo items and update the recycler view
-        this.todoItems = database.todoDAO().fetchTodos();
-        renderView(this.todoItems);
+        List<Todo> userTodos= new ArrayList<Todo>();
+        List<TodoWithUser> todosWithUsers = database.userDAO().getUserTodos(loggedInUserId);
+
+        if(todosWithUsers.size()>0){
+            this.todoItems = todosWithUsers.get(0).todoItems;
+            renderView(this.todoItems);
+        }
     }
 
     public void reRenderList(){
-
         // refetch the todo items from the database
         this.todoItems.clear();
-        this.todoItems.addAll(database.todoDAO().fetchTodos());
+        fetchAllTodos();
 
         // re-render recycler view for the saved data
         todoListAdapter.notifyDataSetChanged();

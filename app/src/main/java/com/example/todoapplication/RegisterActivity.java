@@ -71,6 +71,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 User newUser = new User(fullName, username, password);
                 database.userDAO().insert(newUser);
                 Toast.makeText(this, "Account created!", Toast.LENGTH_SHORT).show();
+
+                Intent loginIntent = new Intent(this, LoginActivity.class);
+                startActivity(loginIntent);
         }
     }
 }

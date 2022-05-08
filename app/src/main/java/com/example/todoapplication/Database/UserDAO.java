@@ -4,8 +4,12 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
+import com.example.todoapplication.Models.TodoWithUser;
 import com.example.todoapplication.Models.User;
+
+import java.util.List;
 
 @Dao
 public interface UserDAO {
@@ -21,4 +25,8 @@ public interface UserDAO {
 
    @Query("SELECT * FROM users WHERE id=:id")
    User getUserDetails(int id);
+
+   @Transaction
+   @Query("SELECT * FROM users WHERE id=:id")
+   List<TodoWithUser> getUserTodos(int id);
 }

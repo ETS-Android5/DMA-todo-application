@@ -9,27 +9,31 @@ import java.io.Serializable;
 public class Todo implements Serializable {
 
    @PrimaryKey(autoGenerate = true)
-   int id;
+   public int id;
+
+   @ColumnInfo(name="userId")
+   public int userId;
 
    @ColumnInfo(name = "title")
-   String title;
+   public String title;
 
    @ColumnInfo(name = "description")
-   String description;
+   public String description;
 
    @ColumnInfo(name = "createdAt")
-   String createdAt;
+   public String createdAt;
 
    @ColumnInfo(name = "isCompleted")
-   boolean isCompleted;
+   public boolean isCompleted;
 
    public Todo(){}
 
-   public Todo(String title, String description, String createdAt, boolean isCompleted) {
+   public Todo(String title, String description, String createdAt, boolean isCompleted, int userId) {
       this.title = title;
       this.description = description;
       this.createdAt = createdAt;
       this.isCompleted = isCompleted;
+      this.userId = userId;
    }
 
    public int getId() {

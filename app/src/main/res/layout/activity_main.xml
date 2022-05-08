@@ -8,15 +8,38 @@
     android:background="@color/bg_primary"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/user_greeting"
-        android:layout_margin="@dimen/dimen_regular"
-        android:layout_width="wrap_content"
-        android:text="@string/greeting"
-        android:textColor="@color/white_primary"
-        android:textStyle="bold"
-        android:textSize="@dimen/font_large"
-        android:layout_height="wrap_content" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/home_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/user_greeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_regular"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/greeting"
+            android:textColor="@color/white_primary"
+            android:textSize="@dimen/font_large"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/log_out_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_baseline_exit_to_app_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="@dimen/dimen_regular"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_todo"
@@ -25,7 +48,7 @@
         android:background="@color/bg_secondary"
         app:iconifiedByDefault="false"
         app:queryHint="@string/search_todo_hint"
-        android:layout_below="@+id/user_greeting"
+        android:layout_below="@+id/home_top_bar"
         android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
