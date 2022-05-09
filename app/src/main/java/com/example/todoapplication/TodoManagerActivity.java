@@ -10,7 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.todoapplication.Models.Todo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,6 +28,8 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
     FloatingActionButton addTodoBtn;
     Button deleteTodoBtn;
     Spinner todoCategoryDropdown;
+    TextView actionBarTitle;
+    ImageView goBackIcon;
 
     String title, description = "";
     Todo todo;
@@ -42,12 +46,15 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_manager);
+        getSupportActionBar().hide();
 
         todoTitle = findViewById(R.id.todo_title_input);
         todoDescription = findViewById(R.id.todo_description_input);
         addTodoBtn = findViewById(R.id.add_todo_btn);
         deleteTodoBtn = findViewById(R.id.delete_todo_btn);
         todoCategoryDropdown = findViewById(R.id.todo_category_dropdown);
+        actionBarTitle = findViewById(R.id.action_bar_title);
+        goBackIcon = findViewById(R.id.go_back_icon);
 
         // populate dropdown with values from the TODO_CATEGORY list
         populateDropdown();
@@ -70,6 +77,7 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
         if(getIntent().getSerializableExtra(UPDATE_TODO_EXTRA)!=null){
             todo = (Todo) getIntent().getSerializableExtra(UPDATE_TODO_EXTRA);
             isOldTodo = true;
+            actionBarTitle.setText("Update Todo");
             setOldValues();
 
             // set dropdown value
@@ -86,6 +94,7 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
         // on click listeners for add/update and delete buttons
         deleteTodoBtn.setOnClickListener(this);
         addTodoBtn.setOnClickListener(this);
+        goBackIcon.setOnClickListener(this);
     }
 
     @Override
@@ -111,6 +120,11 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
 
             case R.id.delete_todo_btn:
                 intent.putExtra(DELETE_TODO_EXTRA, this.todo);
+                break;
+
+            case R.id.go_back_icon:
+                finish();
+                //finishActivity(RESULT_CANCELED);
                 break;
 
             default:

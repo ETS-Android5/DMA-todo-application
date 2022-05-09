@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Todo Application</string>
     <string name="todo_title_hint">Todo Title</string>
-    <string name="todo_description_hint">Todo Description</string>
+    <string name="todo_description_hint">Some description</string>
     <string name="search_todo_hint">Search Todos</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
@@ -23,4 +23,5 @@
     <string name="log_out_btn_hint">Log Out</string>
     <string name="todo_title_placeholder">Todo title Placeholder</string>
     <string name="delete_entry_btn_hint">Delete Entry</string>
+    <string name="new_todo_action_title">New Todo</string>
 </resources>
