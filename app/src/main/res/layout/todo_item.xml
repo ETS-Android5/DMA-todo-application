@@ -18,6 +18,7 @@
             android:id="@+id/todo_checkbox"
             android:layout_width="wrap_content"
             android:layout_marginStart="@dimen/dimen_regular"
+            android:buttonTint="@color/yellow_primary"
             android:layout_height="wrap_content">
         </CheckBox>
 

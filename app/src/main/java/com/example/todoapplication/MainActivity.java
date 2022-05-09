@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,10 +22,12 @@ import com.example.todoapplication.Database.DB;
 import com.example.todoapplication.Models.Todo;
 import com.example.todoapplication.Models.TodoWithUser;
 import com.example.todoapplication.Models.User;
+import com.example.todoapplication.RecyclerView.GridCategoryAdapter;
 import com.example.todoapplication.RecyclerView.TodoClickListener;
 import com.example.todoapplication.RecyclerView.TodoListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -33,13 +36,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     SearchView searchView;
     TextView userGreeting;
     ImageButton logoutBtn;
+    GridView categoryGrid;
 
     List<Todo> todoItems = new ArrayList<Todo>();
     DB database;
     FloatingActionButton addTodoBtn;
 
-    int loggedInUserId;
+    GridCategoryAdapter gridAdapter;
 
+    int loggedInUserId;
     String searchQuery = "";
 
     public static final int NEW_TODO_REQUEST_CODE = 201;
@@ -58,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         searchView = findViewById(R.id.search_todo);
         userGreeting = findViewById(R.id.user_greeting);
         logoutBtn = findViewById(R.id.log_out_btn);
+        categoryGrid = findViewById(R.id.todo_category_grid);
 
         // get intent details sent from login/splash screen
         Intent initialIntent = getIntent();
@@ -67,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         database = DB.getInstance(this);
         fetchUserDetails();
         fetchAllTodos();
+
+        // fill grid view with categories
+        populateCategoryGrid();
 
         // onclick listener for add buttons
         addTodoBtn.setOnClickListener(this);
@@ -149,6 +158,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void populateCategoryGrid() {
+        List<GridCategory> gridCategories = new ArrayList<GridCategory>();
+        HashMap<String, HashMap<String, Integer>> allCategories= new HashMap<>();
+
+        for (Todo todo: todoItems){
+            boolean completed = todo.getCompleted();
+
+            // add category to key if it doesn't exit
+            if(!allCategories.containsKey(todo.getCategory())){
+                allCategories.put(todo.getCategory(), new HashMap<String, Integer>(){{
+                    put("totalItems", 0);
+                    put("completedItems", 0);
+                }});
+            }
+
+            // add values to the hashmap key
+            allCategories.get(todo.getCategory()).put("totalItems", allCategories.get(todo.getCategory()).get("totalItems")+1);
+            if(completed){
+                allCategories.get(todo.getCategory()).put("completedItems", allCategories.get(todo.getCategory()).get("completedItems")+1);
+            }
+        }
+
+        // fill up the grid categories
+        for(String category: TodoManagerActivity.TODO_CATEGORIES){
+            if(allCategories.containsKey(category)){
+                HashMap<String, Integer> categoryStats = allCategories.get(category);
+                int totalItems = categoryStats.get("totalItems");
+                int completedItems = categoryStats.get("completedItems");
+
+                gridCategories.add(new GridCategory(category, totalItems, completedItems));
+            }
+        }
+
+        gridAdapter = new GridCategoryAdapter(this, R.layout.category_grid_items, gridCategories);
+        categoryGrid.setAdapter(gridAdapter);
+    }
+
     private int fetchUserId(){
         SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.SHARED_PREF, MODE_PRIVATE);
         int userId = sharedPreferences.getInt(LoginActivity.USER_ID, -1);
@@ -183,6 +229,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             this.todoItems = todosWithUsers.get(0).todoItems;
             renderView(this.todoItems);
         }
+
+        this.populateCategoryGrid();
     }
 
     public void reRenderList(){

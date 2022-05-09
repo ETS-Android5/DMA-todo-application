@@ -2,8 +2,7 @@
 <CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:paddingVertical="@dimen/dimen_regular"
-    android:paddingHorizontal="@dimen/dimen_xlarge"
-    android:background="@color/bg_primary"
+    android:paddingEnd="@dimen/dimen_large"
     android:textColor="@color/white_primary"
     android:textStyle="bold"
     android:layout_height="wrap_content">

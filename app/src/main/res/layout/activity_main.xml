@@ -40,7 +40,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_todo"
         android:layout_margin="@dimen/dimen_regular"
@@ -51,13 +50,27 @@
         android:layout_below="@+id/home_top_bar"
         android:layout_height="wrap_content" />
 
+    <GridView
+        android:layout_margin="@dimen/dimen_regular"
+        android:id="@+id/todo_category_grid"
+        android:layout_below="@+id/search_todo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="2"
+        android:horizontalSpacing="@dimen/dimen_regular"
+        android:verticalSpacing="@dimen/dimen_regular"
+        android:gravity="center"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/dimen_small"
-        android:layout_below="@id/search_todo"
+        android:layout_below="@id/todo_category_grid"
         android:layout_marginTop="@dimen/dimen_regular"
-        android:id="@+id/recycler_view" />
+        android:id="@+id/recycler_view" >
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/todo_manager_intent_btn"

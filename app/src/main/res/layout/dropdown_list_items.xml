@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textStyle="bold"
-    android:padding="@dimen/dimen_regular"
+    android:paddingHorizontal="@dimen/dimen_large"
+    android:paddingVertical="@dimen/dimen_regular"
     android:background="@color/bg_secondary"
     android:textColor="@color/white_primary"
     >
