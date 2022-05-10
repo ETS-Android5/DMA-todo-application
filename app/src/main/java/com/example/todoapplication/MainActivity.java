@@ -1,16 +1,25 @@
 package com.example.todoapplication;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -48,7 +57,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int loggedInUserId;
     String searchQuery = "";
 
-    boolean categoryGridVisible = false;
+    public boolean categoryGridVisible = false;
+    public boolean selectMode = false;
+    public List<Todo> selectedTodos = new ArrayList<>();
 
     public static final int NEW_TODO_REQUEST_CODE = 201;
     public static final int UPDATE_TODO_REQUEST_CODE = 202;
@@ -69,8 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         categoryGrid = findViewById(R.id.todo_category_grid);
         toggleCategories = findViewById(R.id.toggle_category_icon);
 
-        // get intent details sent from login/splash screen
-        Intent initialIntent = getIntent();
+        // get data for logged in user
         loggedInUserId = fetchUserId();
 
         // pass this as context when initializing database object
@@ -85,6 +95,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addTodoBtn.setOnClickListener(this);
         logoutBtn.setOnClickListener(this);
         toggleCategories.setOnClickListener(this);
+
+        // attach the item swipe helper to recycler view
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeCallBack);
+        itemTouchHelper.attachToRecyclerView(todoRecyclerView);
 
         // listeners for search view
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -184,6 +198,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // swipe listener to delete items
+    ItemTouchHelper.SimpleCallback swipeCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT){
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            deleteTodo(todoItems.get(position));
+        }
+
+        // show "delete" background on swipe
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            View itemView = viewHolder.itemView;
+
+            Paint paint = new Paint();
+            paint.setColor(getResources().getColor(R.color.red_primary));
+
+            c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                    (float) itemView.getRight(), (float) itemView.getBottom(), paint);
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
+
     private void populateCategoryGrid() {
         List<GridCategory> gridCategories = new ArrayList<GridCategory>();
         HashMap<String, HashMap<String, Integer>> allCategories= new HashMap<>();
@@ -237,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // loop through the todo items to compare their contents with the query
         for(Todo todo : todoItems){
-            if(todo.getTitle().toLowerCase().contains(this.searchQuery)){
+            if(todo.getTitle().toLowerCase().contains(this.searchQuery.toLowerCase())){
                 newList.add(todo);
             }
         }
@@ -306,7 +349,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final TodoClickListener todoClickListener = new TodoClickListener() {
         @Override
         public void onClick(Todo todo, String action) {
-            // update todo
+            // check if select mode is on, if it is do not go to the update todo intent
+            if(MainActivity.this.selectMode){
+
+                if(!MainActivity.this.selectedTodos.contains(todo)){
+                    MainActivity.this.selectedTodos.add(todo);
+                }else{
+                    MainActivity.this.selectedTodos.remove(todo);
+                }
+                return;
+            }
+
+            // redirect to update todo
             if(action==TodoListAdapter.UPDATE_TODO_ACTION){
                 Intent intent = new Intent(MainActivity.this, TodoManagerActivity.class);
                 intent.putExtra(TodoManagerActivity.UPDATE_TODO_EXTRA, todo);
@@ -321,6 +375,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onLongClick(Todo todo, CardView cardView) {
+            MainActivity.this.selectMode = true;
         }
     };
 }

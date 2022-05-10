@@ -1,6 +1,7 @@
 package com.example.todoapplication.RecyclerView;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.example.todoapplication.R;
 
 import java.util.List;
 
+// get data for logged in user
 public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoViewHolder> {
 
    public static final String UPDATE_TODO_ACTION = "update_todo_action";
@@ -23,7 +25,6 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
    Context context;
    List<Todo> todoItems;
 
-   DB database;
    TodoClickListener todoClickListener;
 
    public void setFilteredItems(List<Todo> todoItems){
@@ -60,6 +61,11 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
       holder.todoTitle.setText(currentTodo.getTitle());
       holder.todoCategory.setText(currentTodo.getCategory());
       holder.todoStatus.setChecked(currentTodo.getCompleted());
+
+      // strike through
+      if(currentTodo.getCompleted()){
+         holder.todoTitle.setPaintFlags(holder.todoTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+      }
 
       // check if description is empty of too long for the preview
       if(!currentTodo.getDescription().isEmpty()){
