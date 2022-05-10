@@ -25,4 +25,6 @@
     <string name="delete_entry_btn_hint">Delete Entry</string>
     <string name="new_todo_action_title">New Todo</string>
     <string name="splash_screen_tag">Keep track of whats important</string>
+    <string name="no_data_title">Nothing to Show</string>
+    <string name="no_data_subtitle">Saved todos will eventually show up here. \n Go try some!</string>
 </resources>

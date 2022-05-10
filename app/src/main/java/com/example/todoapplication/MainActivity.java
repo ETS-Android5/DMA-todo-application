@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton logoutBtn;
     GridView categoryGrid;
     ImageView toggleCategories;
+    ConstraintLayout categorySectionContainer;
+    ConstraintLayout noDataContainer;
 
     List<Todo> todoItems = new ArrayList<Todo>();
     DB database;
@@ -79,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         logoutBtn = findViewById(R.id.log_out_btn);
         categoryGrid = findViewById(R.id.todo_category_grid);
         toggleCategories = findViewById(R.id.toggle_category_icon);
+        categorySectionContainer = findViewById(R.id.category_section_container);
+        noDataContainer = findViewById(R.id.no_data_container);
 
         // get data for logged in user
         loggedInUserId = fetchUserId();
@@ -300,6 +305,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         this.populateCategoryGrid();
+
+        // check if any todos exist, if not show the no data image and hide the category section
+        if(this.todoItems.size()==0){
+            categorySectionContainer.setVisibility(View.GONE);
+            searchView.setVisibility(View.GONE);
+
+            // display the no data image
+            noDataContainer.setVisibility(View.VISIBLE);
+        }
+        else{
+            categorySectionContainer.setVisibility(View.VISIBLE);
+            searchView.setVisibility(View.VISIBLE);
+            noDataContainer.setVisibility(View.GONE);
+        }
     }
 
     public void reRenderList(){
