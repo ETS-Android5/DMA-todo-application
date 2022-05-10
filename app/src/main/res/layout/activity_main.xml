@@ -43,6 +43,7 @@
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_todo"
         android:layout_margin="@dimen/dimen_regular"
+        app:searchIcon="@drawable/ic_baseline_search_24"
         android:layout_width="match_parent"
         android:background="@color/bg_secondary"
         app:iconifiedByDefault="false"

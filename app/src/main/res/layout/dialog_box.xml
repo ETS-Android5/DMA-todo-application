@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:paddingVertical="@dimen/dimen_regular"
+    android:paddingHorizontal="@dimen/dimen_xlarge"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:background="@color/bg_secondary"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/dialog_subtitle"
+        android:text="Are you sure you want to delete this todo?"
+        android:textColor="@color/white_primary"
+        android:textStyle="bold"
+        android:textSize="@dimen/font_regular"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/dimen_regular"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/dialog_btn_yes"
+            android:text="Yes"
+            android:layout_width="wrap_content"
+            android:backgroundTint="@color/red_primary"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/dialog_btn_no"
+            android:text="No"
+            android:layout_marginStart="@dimen/dimen_regular"
+            android:layout_width="wrap_content"
+            android:backgroundTint="@color/bg_secondary"
+            android:textColor="@color/white_primary"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,8 +1,12 @@
 package com.example.todoapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.todoapplication.Models.Todo;
+import com.example.todoapplication.Utils.DialogBox;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +41,8 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
     String todoCategory;
     boolean isOldTodo;
 
+    Dialog dialog;
+
     public static final String NEW_TODO_EXTRA = "new_todo";
     public static final String UPDATE_TODO_EXTRA = "update_todo";
     public static final String DELETE_TODO_EXTRA = "delete_todo";
@@ -55,6 +62,7 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
         todoCategoryDropdown = findViewById(R.id.todo_category_dropdown);
         actionBarTitle = findViewById(R.id.action_bar_title);
         goBackIcon = findViewById(R.id.go_back_icon);
+        dialog = new Dialog(this);
 
         // populate dropdown with values from the TODO_CATEGORY list
         populateDropdown();
@@ -116,21 +124,32 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
                 }
 
                 intent.putExtra(isOldTodo?UPDATE_TODO_EXTRA:NEW_TODO_EXTRA, isOldTodo?updateTodo():createNewTodo());
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
 
             case R.id.delete_todo_btn:
-                intent.putExtra(DELETE_TODO_EXTRA, this.todo);
+                showCustomDialog();
                 break;
 
             case R.id.go_back_icon:
                 finish();
-                //finishActivity(RESULT_CANCELED);
                 break;
 
             default:
                 return;
         }
+    }
 
+    public void showCustomDialog(){
+        DialogBox dialogBox = new DialogBox(this);
+        dialogBox.show();
+
+    }
+
+    public void deleteTodo(){
+        Intent intent = new Intent();
+        intent.putExtra(DELETE_TODO_EXTRA, this.todo);
         setResult(RESULT_OK, intent);
         finish();
     }

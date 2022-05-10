@@ -24,4 +24,5 @@
     <string name="todo_title_placeholder">Todo title Placeholder</string>
     <string name="delete_entry_btn_hint">Delete Entry</string>
     <string name="new_todo_action_title">New Todo</string>
+    <string name="splash_screen_tag">Keep track of whats important</string>
 </resources>
