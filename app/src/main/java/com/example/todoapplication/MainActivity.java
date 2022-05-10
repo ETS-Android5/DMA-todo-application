@@ -11,10 +11,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView userGreeting;
     ImageButton logoutBtn;
     GridView categoryGrid;
+    ImageView toggleCategories;
 
     List<Todo> todoItems = new ArrayList<Todo>();
     DB database;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     int loggedInUserId;
     String searchQuery = "";
+
+    boolean categoryGridVisible = false;
 
     public static final int NEW_TODO_REQUEST_CODE = 201;
     public static final int UPDATE_TODO_REQUEST_CODE = 202;
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userGreeting = findViewById(R.id.user_greeting);
         logoutBtn = findViewById(R.id.log_out_btn);
         categoryGrid = findViewById(R.id.todo_category_grid);
+        toggleCategories = findViewById(R.id.toggle_category_icon);
 
         // get intent details sent from login/splash screen
         Intent initialIntent = getIntent();
@@ -77,9 +81,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // fill grid view with categories
         populateCategoryGrid();
 
-        // onclick listener for add buttons
+        // onclick listener for add buttons and views
         addTodoBtn.setOnClickListener(this);
         logoutBtn.setOnClickListener(this);
+        toggleCategories.setOnClickListener(this);
 
         // listeners for search view
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -117,12 +122,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(loginIntent);
                 finish();
                 Toast.makeText(this, "Logged out!", Toast.LENGTH_SHORT).show();
+                break;
 
+            case R.id.toggle_category_icon:
+                categoryGridVisible = !categoryGridVisible;
+                this.toggleCategories();
                 break;
 
             default:
                 return;
         }
+    }
+
+    public void toggleCategories(){
+
+        int visibility;
+        int iconSource;
+
+        if(categoryGridVisible){
+            visibility = View.VISIBLE;
+            iconSource = R.drawable.ic_baseline_horizontal_rule_24;
+        }else{
+            visibility = View.GONE;
+            iconSource = R.drawable.ic_baseline_add_24;
+        }
+
+        categoryGrid.setVisibility(visibility);
+        toggleCategories.setImageResource(iconSource);
     }
 
     @Override

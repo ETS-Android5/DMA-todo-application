@@ -59,7 +59,7 @@ public class GridCategoryAdapter extends ArrayAdapter<GridCategory> {
         if(category.totalItems == 0){
             holder.categoryStatus.setText("No Items");
         }else{
-            holder.categoryStatus.setText(category.completedItems+" completed of "+category.totalItems);
+            holder.categoryStatus.setText(category.completedItems+" of "+category.totalItems+" completed.");
         }
         holder.categoryIcon.setImageResource(getCategoryIcon(category.categoryName));
 

@@ -50,19 +50,44 @@
         android:layout_below="@+id/home_top_bar"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/category_section_hint"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/category_section_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/search_todo"
+        android:padding="@dimen/dimen_regular"
+        >
 
-        />
+        <TextView
+            android:id="@+id/category_section_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="Categories"
+            android:textColor="@color/white_secondary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/toggle_category_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_add_24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <GridView
         android:layout_margin="@dimen/dimen_regular"
         android:id="@+id/todo_category_grid"
-        android:layout_below="@+id/search_todo"
+        android:layout_below="@+id/category_section_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:numColumns="2"
         android:horizontalSpacing="@dimen/dimen_regular"
         android:verticalSpacing="@dimen/dimen_regular"
