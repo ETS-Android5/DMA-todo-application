@@ -12,5 +12,7 @@
         <!-- Search view text color -->
         <item name="android:editTextColor">@color/white_primary</item>
         <item name="android:textColorHint">@color/white_secondary</item>
+
+        <item name="android:fontFamily">@font/lato_regular</item>
     </style>
 </resources>
