@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:id="@+id/dialog_subtitle"
-        android:text="Are you sure you want to delete this todo?"
+        android:text="@string/delete_dialog_box_title"
         android:textColor="@color/white_primary"
         android:textStyle="bold"
         android:textSize="@dimen/font_regular"
@@ -26,22 +26,24 @@
 
         <Button
             android:id="@+id/dialog_btn_yes"
-            android:text="Yes"
+            android:text="@string/yes_dialog_option"
             android:layout_width="wrap_content"
             android:backgroundTint="@color/red_primary"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            style="?android:attr/buttonBarButtonStyle" />
 
         <Button
             android:id="@+id/dialog_btn_no"
-            android:text="No"
+            android:text="@string/no_dialog_option"
             android:layout_marginStart="@dimen/dimen_regular"
             android:layout_width="wrap_content"
             android:backgroundTint="@color/bg_secondary"
             android:textColor="@color/white_primary"
             android:textStyle="bold"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            style="?android:attr/buttonBarButtonStyle" />
 
     </LinearLayout>
 

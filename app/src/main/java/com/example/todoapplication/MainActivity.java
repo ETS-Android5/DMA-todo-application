@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,13 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -205,16 +200,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // swipe listener to delete items
     ItemTouchHelper.SimpleCallback swipeCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT){
-
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
             return false;
         }
 
+        // swipe to delete
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getAdapterPosition();
-            deleteTodo(todoItems.get(position));
+            Todo todo = todoItems.get(position);
+
+            // check if todo was collaborated, if it was do not let user delete the todo
+            if(todo.getCollaboratorId()==fetchUserId()){
+                todoListAdapter.notifyDataSetChanged();
+                Toast.makeText(MainActivity.this, "Cannot delete this todo.", Toast.LENGTH_SHORT).show();
+            }else{
+                deleteTodo(todoItems.get(position));
+            }
+
         }
 
         // show "delete" background on swipe
@@ -296,11 +300,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void fetchAllTodos(){
         // get all todo items and update the recycler view
-        List<Todo> userTodos= new ArrayList<Todo>();
         List<TodoWithUser> todosWithUsers = database.userDAO().getUserTodos(loggedInUserId);
+        List<Todo> collaboratedTodos = database.todoDAO().getCollaboratedTodo(loggedInUserId);
 
-        if(todosWithUsers.size()>0){
-            this.todoItems = todosWithUsers.get(0).todoItems;
+        if(todosWithUsers.size()>0 || collaboratedTodos.size()>0){
+            List<Todo> allTodos = new ArrayList<Todo>();
+
+            // add collaborated and personal todos to the list
+            allTodos.addAll(todosWithUsers.get(0).todoItems);
+            allTodos.addAll(collaboratedTodos);
+
+            this.todoItems = allTodos;
             renderView(this.todoItems);
         }
 
@@ -331,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void updateTodo(Todo updatedTodo){
-        database.todoDAO().updateTodo(updatedTodo.getId(), updatedTodo.getTitle(), updatedTodo.getDescription(), updatedTodo.getCategory());
+        database.todoDAO().updateTodo(updatedTodo.getId(), updatedTodo.getTitle(), updatedTodo.getDescription(), updatedTodo.getCategory(), updatedTodo.getCollaboratorId());
         reRenderList();
         Toast.makeText(this, "Todo Updated!", Toast.LENGTH_SHORT).show();
     }

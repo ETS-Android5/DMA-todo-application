@@ -38,76 +38,121 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <EditText
+    <RelativeLayout
         android:layout_below="@+id/todo_manager_header"
-        android:id="@+id/todo_title_input"
-        android:hint="@string/todo_title_hint"
-        android:inputType="text"
+        android:id="@+id/todo_area_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/font_xlarge"
-        android:layout_marginBottom="@dimen/dimen_medium"
-        android:paddingBottom="@dimen/dimen_medium"
-        android:background="@color/bg_primary"
-        />
-
-    <EditText
-        android:id="@+id/todo_description_input"
-        android:hint="@string/todo_description_hint"
-        android:layout_below="@id/todo_title_input"
-        style="@style/input_style"
-        android:inputType="text|textMultiLine"
-        android:lines="4"
-        android:gravity="start"
-        />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/category_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/todo_description_input"
-        android:background="@color/bg_secondary"
         >
 
-        <TextView
-            android:id="@+id/todo_category_hint"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/todo_title_input"
+            android:hint="@string/todo_title_hint"
+            android:inputType="text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Category"
-            android:paddingStart="@dimen/dimen_regular"
-            android:textColor="@color/white_secondary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="@dimen/font_xlarge"
+            android:layout_marginBottom="@dimen/dimen_medium"
+            android:paddingBottom="@dimen/dimen_medium"
+            android:background="@color/bg_primary"
+            />
 
-        <Spinner
-            android:id="@+id/todo_category_dropdown"
+        <EditText
+            android:id="@+id/todo_description_input"
+            android:hint="@string/todo_description_hint"
+            android:layout_below="@id/todo_title_input"
             style="@style/input_style"
-            android:layout_width="wrap_content"
-            android:layout_margin="0dp"
-            android:padding="0dp"
-            android:spinnerMode="dropdown"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:inputType="text|textMultiLine"
+            android:lines="4"
+            android:gravity="start"
+            />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/category_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:paddingEnd="@dimen/dimen_regular"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_below="@+id/todo_description_input"
+            android:background="@color/bg_secondary"
+            android:paddingVertical="@dimen/dimen_regular">
+
+            <TextView
+                android:id="@+id/todo_category_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/dimen_regular"
+                android:text="Category"
+                android:textColor="@color/white_secondary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/todo_category_dropdown"
+                style="@style/input_style"
+                android:layout_width="wrap_content"
+                android:layout_margin="0dp"
+                android:padding="0dp"
+                android:spinnerMode="dropdown"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/dimen_regular"
+                android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <EditText
+            android:layout_marginTop="@dimen/dimen_regular"
+            android:layout_below="@+id/category_container"
+            android:id="@+id/todo_collaborator_input"
+            android:hint="@string/collaborator_username_hint"
+            android:inputType="text"
+            style="@style/input_style"
+            />
+
+        <LinearLayout
+            android:id="@+id/remove_collaborator_container"
+            android:layout_marginTop="@dimen/dimen_regular"
+            android:layout_below="@id/category_container"
+            android:layout_width="match_parent"
+            style="@style/input_style"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/collaborator_label"
+                android:textColor="@color/white_secondary"
+                />
+
+            <Button
+                android:id="@+id/remove_collaborator_btn"
+                android:layout_marginLeft="@dimen/dimen_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remove"
+                android:backgroundTint="@color/red_primary"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/delete_todo_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/delete_entry_btn_hint"
-        android:layout_below="@id/category_container"
+        android:layout_below="@id/todo_area_container"
         android:layout_marginTop="@dimen/dimen_regular"
         android:backgroundTint="@color/red_primary"
         android:visibility="gone"

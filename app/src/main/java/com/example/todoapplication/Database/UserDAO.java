@@ -26,6 +26,9 @@ public interface UserDAO {
    @Query("SELECT * FROM users WHERE id=:id")
    User getUserDetails(int id);
 
+   @Query("SELECT id FROM users WHERE username=:username")
+   int getIdByUsername(String username);
+
    @Transaction
    @Query("SELECT * FROM users WHERE id=:id")
    List<TodoWithUser> getUserTodos(int id);

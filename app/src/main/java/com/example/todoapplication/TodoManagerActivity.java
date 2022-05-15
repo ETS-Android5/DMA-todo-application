@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,9 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.todoapplication.Database.DB;
 import com.example.todoapplication.Models.Todo;
 import com.example.todoapplication.Utils.DialogBox;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,19 +30,23 @@ import java.util.List;
 
 public class TodoManagerActivity extends AppCompatActivity implements  View.OnClickListener{
 
-    EditText todoTitle, todoDescription;
+    EditText todoTitle, todoDescription, collaborationInput;
     FloatingActionButton addTodoBtn;
-    Button deleteTodoBtn;
+    Button deleteTodoBtn, removeCollaboratorBtn;
     Spinner todoCategoryDropdown;
     TextView actionBarTitle;
     ImageView goBackIcon;
+    LinearLayout removeCollaboratorContainer;
 
-    String title, description = "";
+    String title, description, collaboratorUsername = "";
     Todo todo;
+    int collaboratorId;
     String todoCategory;
     boolean isOldTodo;
 
     Dialog dialog;
+
+    DB database;
 
     public static final String NEW_TODO_EXTRA = "new_todo";
     public static final String UPDATE_TODO_EXTRA = "update_todo";
@@ -57,12 +62,18 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
 
         todoTitle = findViewById(R.id.todo_title_input);
         todoDescription = findViewById(R.id.todo_description_input);
+        collaborationInput = findViewById(R.id.todo_collaborator_input);
         addTodoBtn = findViewById(R.id.add_todo_btn);
+        removeCollaboratorBtn = findViewById(R.id.remove_collaborator_btn);
         deleteTodoBtn = findViewById(R.id.delete_todo_btn);
         todoCategoryDropdown = findViewById(R.id.todo_category_dropdown);
         actionBarTitle = findViewById(R.id.action_bar_title);
         goBackIcon = findViewById(R.id.go_back_icon);
+        removeCollaboratorContainer = findViewById(R.id.remove_collaborator_container);
+
         dialog = new Dialog(this);
+
+        database = DB.getInstance(this);
 
         // populate dropdown with values from the TODO_CATEGORY list
         populateDropdown();
@@ -92,17 +103,26 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
             int dropdownItemPosition = TODO_CATEGORIES.indexOf(todo.getCategory());
             todoCategoryDropdown.setSelection(dropdownItemPosition);
 
-            // set the delete button's visibility to visible
-            deleteTodoBtn.setVisibility(View.VISIBLE);
+            if(todo.getCollaboratorId()!=fetchUserId()){
+                // set the delete button's visibility to visible
+                deleteTodoBtn.setVisibility(View.VISIBLE);
+
+                // show option to remove collaborator if one exists
+                checkCollabortorStatus();
+            }else{
+                collaborationInput.setVisibility(View.GONE);
+            }
 
             // change title to update todo
             this.setTitle("Update Todo");
         }
 
         // on click listeners for add/update and delete buttons
+        removeCollaboratorBtn.setOnClickListener(this);
         deleteTodoBtn.setOnClickListener(this);
         addTodoBtn.setOnClickListener(this);
         goBackIcon.setOnClickListener(this);
+
     }
 
     @Override
@@ -117,10 +137,28 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
                 String todoText = todoDescription.getText().toString();
                 this.description = todoText.isEmpty()?"":todoText;
 
+                String collaboratorText = collaborationInput.getText().toString();
+                this.collaboratorUsername = collaboratorText.isEmpty()?null:collaboratorText;
+
                 // validate title
                 if(title.isEmpty()){
                     Toast.makeText(TodoManagerActivity.this, "The title cannot be empty.", Toast.LENGTH_SHORT).show();
                     return;
+                }
+
+                // check collaborator
+                if(this.collaboratorUsername!=null){
+                    int id = database.userDAO().getIdByUsername(collaboratorUsername);
+                    if(id==0){
+                        Toast.makeText(this, "Invalid collaborator", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if(this.todo!=null){
+                        this.todo.setCollaboratorId(id);
+                    }else{
+                        this.collaboratorId = id;
+                    }
                 }
 
                 intent.putExtra(isOldTodo?UPDATE_TODO_EXTRA:NEW_TODO_EXTRA, isOldTodo?updateTodo():createNewTodo());
@@ -136,8 +174,24 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
                 finish();
                 break;
 
+            case R.id.remove_collaborator_btn:
+                this.todo.setCollaboratorId(0);
+                checkCollabortorStatus();
+                break;
+
             default:
                 return;
+        }
+    }
+
+    public void checkCollabortorStatus(){
+        if(this.todo.getCollaboratorId()!=0){
+            removeCollaboratorContainer.setVisibility(View.VISIBLE);
+            collaborationInput.setVisibility(View.GONE);
+
+        }else{
+            removeCollaboratorContainer.setVisibility(View.GONE);
+            collaborationInput.setVisibility(View.VISIBLE);
         }
     }
 
@@ -183,8 +237,14 @@ public class TodoManagerActivity extends AppCompatActivity implements  View.OnCl
         int userId = sharedPreferences.getInt(LoginActivity.USER_ID, -1);
 
         // create the new todo object
-        Todo newTodo = new Todo(title, description, createdAt, false, userId, todoCategory);
+        Todo newTodo = new Todo(title, description, createdAt, false, userId, todoCategory, collaboratorId);
 
         return newTodo;
+    }
+
+    private int fetchUserId(){
+        SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.SHARED_PREF, MODE_PRIVATE);
+        int userId = sharedPreferences.getInt(LoginActivity.USER_ID, -1);
+        return userId;
     }
 }

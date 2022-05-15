@@ -39,6 +39,14 @@
             android:id="@+id/password_input"
             android:hint="@string/password_input_hint" />
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/input_style"
+            android:inputType="textPassword"
+            android:id="@+id/confirm_password_input"
+            android:hint="@string/confirm_password_hint" />
+
         <Button
             android:id="@+id/register_btn"
             android:text="@string/create_account_btn_hint"

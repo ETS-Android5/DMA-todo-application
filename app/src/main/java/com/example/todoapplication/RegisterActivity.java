@@ -15,7 +15,7 @@ import com.example.todoapplication.Models.User;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    EditText fullNameInput, usernameInput, passwordInput;
+    EditText fullNameInput, usernameInput, passwordInput, confirmPasswordInput;
     Button registerBtn;
     TextView redirectText;
 
@@ -35,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         fullNameInput = findViewById(R.id.full_name_input);
         usernameInput = findViewById(R.id.username_input);
         passwordInput = findViewById(R.id.password_input);
+        confirmPasswordInput = findViewById(R.id.confirm_password_input);
         registerBtn = findViewById(R.id.register_btn);
         redirectText = findViewById(R.id.auth_redirect);
 
@@ -57,9 +58,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 String fullName = fullNameInput.getText().toString();
                 String username = usernameInput.getText().toString().trim();
                 String password = passwordInput.getText().toString();
+                String confirmPassword = confirmPasswordInput.getText().toString();
 
-                if(fullName.isEmpty() || username.isEmpty() || password.isEmpty()){
+                if(fullName.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()){
                     Toast.makeText(this, "Please fill out all the fields", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if(!password.equals(confirmPassword)){
+                    Toast.makeText(this, "Your passwords do not match", Toast.LENGTH_SHORT).show();
+                    return;
+                }else if(password.length()<5){
+                    Toast.makeText(this, "Password must 5 characters long", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -74,6 +83,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                 Intent loginIntent = new Intent(this, LoginActivity.class);
                 startActivity(loginIntent);
+                finish();
         }
     }
 }

@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.auth_redirect:
                 Intent intent = new Intent(this, RegisterActivity.class);
                 startActivity(intent);
+                finish();
                 break;
 
             case R.id.sign_in_btn:

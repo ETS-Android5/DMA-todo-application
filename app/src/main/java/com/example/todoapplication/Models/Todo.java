@@ -14,6 +14,9 @@ public class Todo implements Serializable {
    @ColumnInfo(name="userId")
    public int userId;
 
+   @ColumnInfo(name="collaboratorId")
+   public int collaboratorId;
+
    @ColumnInfo(name = "title")
    public String title;
 
@@ -31,13 +34,14 @@ public class Todo implements Serializable {
 
    public Todo(){}
 
-   public Todo(String title, String description, String createdAt, boolean isCompleted, int userId, String category) {
+   public Todo(String title, String description, String createdAt, boolean isCompleted, int userId, String category, int collaboratorId) {
       this.title = title;
       this.description = description;
       this.createdAt = createdAt;
       this.isCompleted = isCompleted;
       this.userId = userId;
       this.category = category;
+      this.collaboratorId = collaboratorId;
    }
 
    public int getId() {
@@ -62,6 +66,14 @@ public class Todo implements Serializable {
 
    public void setDescription(String description) {
       this.description = description;
+   }
+
+   public int getCollaboratorId(){
+      return this.collaboratorId;
+   }
+
+   public void setCollaboratorId(int id){
+      this.collaboratorId = id;
    }
 
    public String getCreatedAt() {

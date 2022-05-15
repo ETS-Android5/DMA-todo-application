@@ -1,7 +1,9 @@
 package com.example.todoapplication.RecyclerView;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.todoapplication.Database.DB;
+
+import com.example.todoapplication.LoginActivity;
 import com.example.todoapplication.Models.Todo;
 import com.example.todoapplication.R;
 
@@ -67,6 +70,12 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
          holder.todoTitle.setPaintFlags(holder.todoTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
       }
 
+      // check if todo was collaborated
+      if(currentTodo.getCollaboratorId()==fetchUserId()){
+         Log.d("hello", "Collaborated");
+         holder.todoStatus.setButtonTintList(context.getResources().getColorStateList(R.color.green_primary));
+      }
+
       // check if description is empty of too long for the preview
       if(!currentTodo.getDescription().isEmpty()){
          holder.tododescription.setVisibility(View.VISIBLE);
@@ -95,6 +104,12 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoVi
             todoClickListener.onClick(todoItems.get(holder.getAdapterPosition()), TOGGLE_TODO_ACTION);
          }
       });
+   }
+
+   private int fetchUserId(){
+      SharedPreferences sharedPreferences = context.getSharedPreferences(LoginActivity.SHARED_PREF, Context.MODE_PRIVATE);
+      int userId = sharedPreferences.getInt(LoginActivity.USER_ID, -1);
+      return userId;
    }
 
    @Override
